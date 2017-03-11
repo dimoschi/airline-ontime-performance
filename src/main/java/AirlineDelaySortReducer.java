@@ -6,12 +6,12 @@ import com.google.common.collect.Iterables;
 import org.apache.log4j.Logger;
 
 public class AirlineDelaySortReducer
-    extends Reducer<Text, Text, Text, Text> {
+extends Reducer<Text, Text, Text, Text> {
 
     private Logger logger = Logger.getLogger(this.getClass());
 
     public void reduce(Text key, Text value, Context context)
-        throws IOException, InterruptedException {
-            context.write(key, value);
-        }
+    throws IOException, InterruptedException {
+        context.write(key, value);
     }
+}

@@ -9,24 +9,34 @@ import org.apache.log4j.Logger;
 
 
 public class AirlineDelayMapper
-    extends Mapper<LongWritable, Text, Text, DoubleWritable> {
+extends Mapper<LongWritable, Text, Text, DoubleWritable> {
 
     private Logger logger = Logger.getLogger(this.getClass());
 
     @Override
     public void map(LongWritable key, Text value, Context context)
     throws IOException, InterruptedException {
-        // Read input
+        // Read input & parse the line
         Reader in = new StringReader(value.toString());
         CSVParser parser = new CSVParser(in, CSVFormat.EXCEL);
-        List<CSVRecord> record = parser.getRecords();
-        // Check for empty records
-        String isDelayedString = record.get(0).get(8).toString();
+        // getRecords method creates a list, but only one item exists
+        CSVRecord record = parser.getRecords().get(0);
+        /*
+        Set delayTime = 0.00 and check for non-empty records to change that
+
+        Here we make the assumption that an empty record is equal to no delay,
+        but this can also be invalid. It would be better to discard those
+        records.
+        */
         Double delayTime = 0.00;
-        if (!isDelayedString.isEmpty()) {
-            delayTime = Double.parseDouble(record.get(0).get(7).toString());
+        String DelayTimeString = record.get(7);
+        // Simple implementation to parse header line
+        if (DelayTimeString.equals("DEP_DELAY")) {
+            delayTime = 0.00;
+        } else if (!DelayTimeString.isEmpty()) {
+            delayTime = Double.parseDouble(record.get(7));
         }
-        String airline = record.get(0).get(1).toString();
-        context.write(new Text(airline), new DoubleWritable(delayTime));
+        Text carrier = new Text(record.get(1));
+        context.write(carrier, new DoubleWritable(delayTime));
     }
 }
