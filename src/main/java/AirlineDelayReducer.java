@@ -1,8 +1,8 @@
 import java.io.IOException;
+
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-import com.google.common.collect.Iterables;
 import org.apache.log4j.Logger;
 
 public class AirlineDelayReducer
@@ -34,7 +34,8 @@ extends Reducer<Text, DoubleWritable, Text, Text> {
         }
         double avgOfDelays = sumOfDelays/countOfDelayedFlights;
         double percOfDelay = ((double) countOfDelayedFlights)/countOfFlights;
-        Text outputValue = new Text(avgOfDelays + ";" + percOfDelay);
+        // Space is being used to make easier to split the line in 2nd mapper
+        Text outputValue = new Text(avgOfDelays + " " + percOfDelay);
         context.write(key, outputValue);
     }
 }

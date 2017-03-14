@@ -1,20 +1,21 @@
-import java.io.*;
-import java.util.*;
-import org.apache.commons.csv.*;
+import java.io.IOException;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.hadoop.io.DoubleWritable;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
 
 
 public class AirlineDelayMapper
-extends Mapper<LongWritable, Text, Text, DoubleWritable> {
+extends Mapper<Object, Text, Text, DoubleWritable> {
 
     private Logger logger = Logger.getLogger(this.getClass());
 
     @Override
-    public void map(LongWritable key, Text value, Context context)
+    public void map(Object key, Text value, Context context)
     throws IOException, InterruptedException {
         // Read input, parse it and create a record
         CSVRecord record = CSVParser.parse(
