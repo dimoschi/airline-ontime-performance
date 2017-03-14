@@ -16,11 +16,10 @@ extends Mapper<LongWritable, Text, Text, DoubleWritable> {
     @Override
     public void map(LongWritable key, Text value, Context context)
     throws IOException, InterruptedException {
-        // Read input & parse the line
-        Reader in = new StringReader(value.toString());
-        CSVParser parser = new CSVParser(in, CSVFormat.EXCEL);
-        // getRecords method creates a list, but only one item exists
-        CSVRecord record = parser.getRecords().get(0);
+        // Read input, parse it and create a record
+        CSVRecord record = CSVParser.parse(
+            value.toString(), CSVFormat.EXCEL
+        ).getRecords().get(0);
         /*
         Set delayTime = 0.00 and check for non-empty records to change that
 
